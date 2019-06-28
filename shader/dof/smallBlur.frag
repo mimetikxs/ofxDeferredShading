@@ -3,16 +3,17 @@
 in vec2 vTexCoord;
 out vec4 outputColor;
 
-uniform sampler2DRect tex;
+uniform sampler2DRect nearCoc;
 
 void main() {
 
     vec4 col = vec4(0.);
-    col += texture(tex, vTexCoord + vec2(0.5, 0.5));
-    col += texture(tex, vTexCoord + vec2(-0.5, 0.5));
-    col += texture(tex, vTexCoord + vec2(0.5, -0.5));
-    col += texture(tex, vTexCoord + vec2(-0.5, -0.5));
-    col /= 4.;
+	col += texture(nearCoc, vTexCoord) * 0.4;
+    col += texture(nearCoc, vTexCoord + vec2(0.5, 0.5)) * 0.15;
+    col += texture(nearCoc, vTexCoord + vec2(-0.5, 0.5)) * 0.15;
+    col += texture(nearCoc, vTexCoord + vec2(0.5, -0.5)) * 0.15;
+    col += texture(nearCoc, vTexCoord + vec2(-0.5, -0.5)) * 0.15;
+    //col /= 4.;
 
     //outputColor = vec4(vec3(col.a), 1.);
     outputColor = col;

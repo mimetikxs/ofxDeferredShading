@@ -11,7 +11,7 @@ Processor::Processor() {
 	params.setName("ofxDeferredShading");
 }
 
-void Processor::init(unsigned w, unsigned h) {
+void Processor::init(int w, int h) {
 	width = w;
 	height = h;
 
@@ -30,7 +30,8 @@ void Processor::init(unsigned w, unsigned h) {
 	currentReadFbo = 0;
 
 	gbuffer.setup(width, height);
-
+	
+	ofLogNotice("Processor::init") << "w: " << width << ", h: " << height;
 }
 
 void Processor::begin(ofCamera& cam, bool bUseOwnShader) {

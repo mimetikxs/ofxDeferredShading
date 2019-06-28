@@ -24,6 +24,7 @@ namespace ofxDeferred {
 		ofShader applyDof;
 		ofShader debugShader;
 		BlurPass blur;
+		BlurPass blur2;
 
 		ofFbo shrunk;
 		ofFbo shrunkBlurred;

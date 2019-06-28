@@ -14,8 +14,8 @@ namespace ofxDeferred {
 		void setParameters() {
 			group.add(diffuseColor.set("diffuse_color", ofFloatColor(.4)));
 			group.add(specularColor.set("specular_color", ofFloatColor(.9)));
-			group.add(position.set("position", glm::vec3(), glm::vec3(-800.), glm::vec3(800.)));
-			group.add(radius.set("radius", 100., 0.1, 600.));
+			group.add(position.set("position", glm::vec3(), glm::vec3(-400.), glm::vec3(400.)));
+			group.add(radius.set("radius", 100., 0.1, 300.));
 			group.add(intensity.set("intensity", 0.5, 0., 1.));
 		}
 	};

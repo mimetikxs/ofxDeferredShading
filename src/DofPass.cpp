@@ -2,20 +2,23 @@
 
 using namespace ofxDeferred;
 
-DofPass::DofPass(const glm::vec2& size) : RenderPass(size, "DofPass"), blur(size / 4., GL_RGBA) {
+DofPass::DofPass(const glm::vec2& size) : RenderPass(size, "DofPass"), blur(size / 4., GL_RGBA), blur2(size, GL_RGBA) {
 
 	shrunk.allocate(size.x / 4., size.y / 4., GL_RGBA);
 	shrunkBlurred.allocate(size.x / 4., size.y / 4., GL_RGBA);
 	nearCoC.allocate(size.x / 4., size.y / 4., GL_RGBA);
-	colorBlurred.allocate(size.x / 4., size.y / 4., GL_RGBA);
+	nearCoC.getTexture().setTextureMinMagFilter(GL_LINEAR, GL_LINEAR);
+	colorBlurred.allocate(size.x, size.y, GL_RGBA);
+	colorBlurred.getTexture().setTextureMinMagFilter(GL_LINEAR, GL_LINEAR);
 
 	downSample.load(passThruPath, shaderPath + "dof/downSample.frag");
 	calcNearCoc.load(passThruPath, shaderPath + "dof/calcNearCoc.frag");
 	smallBlur.load(passThruPath, shaderPath + "dof/smallBlur.frag");
 	applyDof.load(passThruPath, shaderPath + "dof/applyDof.frag");
 	debugShader.load(passThruPath, shaderPath + "alphaFrag.frag");
-	blur.setPreShrink(4);
-
+	blur.setPreShrink(2);
+	blur2.setPreShrink(2);
+	blur2.setSampleStep(0.1);
 	group.add(endPointsCoC.set("endpoint_coc", glm::vec2(0.9, 0.6), glm::vec2(0.), glm::vec2(1.)));
 	group.add(foculRange.set("focul_range", glm::vec2(0.1, 0.3), glm::vec2(0.), glm::vec2(1.)));
 	group.add(blur.getParameters());
@@ -52,12 +55,12 @@ void DofPass::render(ofFbo& readFbo, ofFbo& writeFbo, GBuffer& gbuffer) {
 		calcNearCoc.setUniformTexture("shrunkBlurred", shrunkBlurred.getTexture(0), 2);
 		nearCoC.draw(0, 0);
 		calcNearCoc.end();
-
 	}
 	nearCoC.end();
 
 	// blur color sample
-	applySmallBlur(nearCoC.getTexture(), colorBlurred);
+	//applySmallBlur(nearCoC.getTexture(), colorBlurred);
+	blur2.render(readFbo, colorBlurred, gbuffer);
 
 	// output
 	writeFbo.begin();
@@ -100,10 +103,11 @@ void DofPass::debugDraw() {
 }
 
 void DofPass::applySmallBlur(const ofTexture& read, ofFbo& write) {
-	write.begin();
+	/*write.begin();
 	ofClear(0);
 	smallBlur.begin();
-	read.draw(0, 0);
+	read.draw(0, 0, write.getWidth(), write.getHeight());
 	smallBlur.end();
-	write.end();
+	write.end();*/
+	
 }

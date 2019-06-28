@@ -29,7 +29,10 @@ namespace ofxDeferred {
 		using Ptr = std::shared_ptr<Processor>;
 
 		Processor();
-		void init(unsigned w = ofGetWidth(), unsigned h = ofGetHeight());
+		void init(int w, int h);
+		void init() {
+			init(ofGetWidth(), ofGetHeight());
+		}
 
 		void begin(ofCamera& cam, bool bUseOwnShader = false);
 		void end(bool autoDraw = true);
